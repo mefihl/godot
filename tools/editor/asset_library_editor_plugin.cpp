@@ -720,22 +720,16 @@ void EditorAssetLibrary::_image_update(bool use_cache, bool final, const ByteArr
 		ByteArray::Read r=image_data.read();
 		Image image(r.ptr(),len);
 		if (!image.empty()) {
-            float max_height = 100;
-            bool image_icon = false;
-
+			float max_height = 10000;
 			switch(image_queue[p_queue_id].image_type) {
-            case IMAGE_QUEUE_ICON:
-                image_icon=true;
-                image.resize(80,80, Image::INTERPOLATE_CUBIC);
-                break;
-            case IMAGE_QUEUE_THUMBNAIL: max_height=150; break;
-            case IMAGE_QUEUE_SCREENSHOT: max_height=345; break;
+				case IMAGE_QUEUE_ICON: max_height=80; break;
+				case IMAGE_QUEUE_THUMBNAIL: max_height=80; break;
+				case IMAGE_QUEUE_SCREENSHOT: max_height=345; break;
 			}
-
-            if (icon==false) {
-                float scale_ratio = max_height / image.get_height();
-                image.resize(image.get_width() * scale_ratio, image.get_height() * scale_ratio, Image::INTERPOLATE_CUBIC);
-            }
+			float scale_ratio = max_height / image.get_height();
+			if(scale_ratio < 1) {
+				image.resize(image.get_width() * scale_ratio, image.get_height() * scale_ratio, Image::INTERPOLATE_CUBIC);
+			}
 
 			Ref<ImageTexture> tex;
 			tex.instance();
